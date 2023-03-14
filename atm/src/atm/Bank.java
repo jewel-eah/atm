@@ -10,6 +10,7 @@ public class Bank {
 	private final int CREATE = 3;
 	private final int DELETE = 4;
 	private final int LOG_IN = 5;
+	private final int QUIT = 0;
 	
 	
 	private UserManager um;
@@ -34,6 +35,7 @@ public class Bank {
 		System.out.println("3. 계좌신청");
 		System.out.println("4. 계좌철회");
 		System.out.println("5. 로그인");
+		System.out.println("0. 종료");
 		System.out.println("메뉴 : ");
 	} 
 	
@@ -52,10 +54,10 @@ public class Bank {
 		ArrayList<User> userList = um.getUserList();
 		for(User UserManager : userList) {
 			if(id.equals(UserManager.getId())) {
-				return true;
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 	
 	
@@ -63,10 +65,15 @@ public class Bank {
 	private void join() {
 		System.out.print("id : ");
 		String id = inputText();
-		if(!isDupl(id)) {
+		if(isDupl(id)) {
+			System.out.println("name : ");
+			String name = inputText();
 			System.out.print("password : ");
 			String password = inputText();
 			
+			User user = new User(id, name, password);
+			um.addUser(user);
+			System.out.println("[ 회원 가입 완료 ]");
 		}
 		else {
 			System.out.println("[ 이미 가입된 아이디입니다. ]");
@@ -76,11 +83,12 @@ public class Bank {
 	
 	
 	public void run() {
-		 printMainMenu();
-		 int select = inputNumber();
-		 if(select == JOIN) {
-			 join();
-		 }
+		while(true) {
+			printMainMenu();
+			int select = inputNumber();
+			if(select == JOIN) {
+				join();
+			}
 //		 else if(select == LEAVE) {
 //			 leave();
 //		 }
@@ -93,6 +101,8 @@ public class Bank {
 //		 else if(select == LOG_IN) {
 //			 login();
 //		 }
+			else if(select == QUIT) break;
+		}
 	}
 	
 }

@@ -14,12 +14,12 @@ public class UserManager {
 	// Create
 	// 외부에서 검증이 완료된 정보들을 넣을 인터페이스만 제공 
 	public void addUser(User user) {
-		this.list.add(user);
+		list.add(user);
 	}
 	
 	// Read
 	public User getUser(int index) {
-		User user = this.list.get(index);
+		User user = list.get(index);
 		// index 구하는 메소드 작성 
 		
 		// 사본 제공 
