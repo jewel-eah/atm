@@ -15,6 +15,8 @@ public class User {
 		this.password = password;
 	}
 
+	// new 객체가 아님 -> AccountManager.list 안에 있는 인스턴스 (static)
+	
 	public ArrayList<Account> getAccs(){
 		return this.accs;
 	}

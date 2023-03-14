@@ -20,10 +20,13 @@ public class UserManager {
 	// Read
 	public User getUser(int index) {
 		User user = list.get(index);
-		// index 구하는 메소드 작성 
+		// index 구하는 메소드 작성
 		
+		String id = user.getId();
+		String password = user.getPassword();
+		String name = user.getName();
 		// 사본 제공 
-		User reqQbj = new User();
+		User reqQbj = new User(id, password, name);
 		return reqQbj;
 	}
 	
@@ -37,11 +40,11 @@ public class UserManager {
 	// Update
 	public void setUser(int index, User user) {
 		// 검증 메소드 작성 
-		this.list.set(index, user);
+		list.set(index, user);
 	}
 	// Delete
 	public void deleteUser(int index) {
-		this.list.remove(index);
+		list.remove(index);
 	}	
 	
 	
@@ -50,7 +53,17 @@ public class UserManager {
 	}
 	
 	public ArrayList<User> getUserList(){
-		return this.list;
+		return list;
+	}
+
+	public int indexOf(String id) {
+		int index = -1;
+		for(int i=0; i<list.size(); i++) {
+			if(id.equals(list.get(i).getId())){
+				index = i;
+			}
+		}
+		return index;
 	}
 	
 	
