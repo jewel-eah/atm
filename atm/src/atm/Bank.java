@@ -1,6 +1,7 @@
 package atm;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Bank {
@@ -18,12 +19,14 @@ public class Bank {
 	private String name;
 	private int log;
 	private Scanner scan;
+	private Random ran;
 
 	// 뱅크 생성자
 	public Bank(String name) {
 		this.name = name;
 		this.log = -1;
 		this.scan = new Scanner(System.in);
+		this.ran = new Random() ;
 		um = new UserManager();
 		am = new AccountManager();
 	}
@@ -144,6 +147,41 @@ public class Bank {
 		}
 	}
 
+
+	private String setAccount() {
+		int num1 = ran.nextInt(8999) + 1000;
+		int num2 = ran.nextInt(8999) + 1000;
+		
+		String number = num1 + "-" + num2;
+		return number;
+		
+	}
+	
+	private void create() {
+		if(isLogged(this.log)) {
+			if(am.getList().get(this.log).getSize() <= Account.LIMIT) {
+				String accountNum = setAccount();
+				if(!accountNum.equals(am.getAccount(this.log).getAcccountNum())) {
+					ArrayList<Account> accountList = am.getList();
+					Account user = accountList.get(this.log);
+					Account account = new Account
+							(user.getUserId(), accountNum, user.getMoney());
+					
+					am.setAccount(this.log, account);
+					am.createAccount(account);
+					System.out.printf("[ %s ] 계좌 개설 완료\n", accountNum);
+				}
+				
+			}
+			else {
+				System.out.println("[ 개설 가능 계좌갯수 초과 ]");
+			}
+		}
+		else {
+			System.out.println("[ 로그인 후 이용가능한 서비스입니다. ]");
+		}
+	}
+	
 	public void run() {
 		while (true) {
 			System.out.println(this.log);
@@ -154,9 +192,9 @@ public class Bank {
 			} else if (select == LEAVE) {
 				leave();
 			}
-//		 else if(select == CREATE) {
-//			 create();
-//		 }
+		 else if(select == CREATE) {
+			 create();
+		 }
 //		 else if(select == DELETE) {
 //			 delete();
 //		 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class AccountManager {
 	
+	// 모든 유저의 계좌번호 
 	private static ArrayList<Account> list = new ArrayList<Account>();
 	
 	// Create
@@ -28,6 +29,10 @@ public class AccountManager {
 	// Delete
 	public void deleteAccount(int index) {
 		list.remove(index);
+	}
+	
+	public ArrayList<Account> getList(){
+		return list;
 	}
 	
 }

@@ -66,27 +66,7 @@ public class UserManager {
 		return index;
 	}
 	
-	
-	
 }
 	
 	
 	
-//	public static void dataSetting(String data) {
-//		String[] lines = data.split("\n");
-//		for (int i = 0; i < lines.length; i++) {
-//			String[] info = lines[i].split("/");
-//
-//			String userId = info[0];
-//			String acc = info[1];
-//			int money = Integer.parseInt(info[2]);
-//
-//			AccountT account = new AccountT(userId, acc, money);
-//			list.add(account);
-//		}
-//	}
-//
-//	public ArrayList<AccountT> getList() {
-//		return list;
-//	}
-//	
