@@ -20,8 +20,6 @@ public class UserManager {
 	// Read
 	public User getUser(int index) {
 		User user = list.get(index);
-		// index 구하는 메소드 작성
-		
 		String id = user.getId();
 		String password = user.getPassword();
 		String name = user.getName();

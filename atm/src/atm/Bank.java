@@ -26,7 +26,7 @@ public class Bank {
 		this.name = name;
 		this.log = -1;
 		this.scan = new Scanner(System.in);
-		this.ran = new Random() ;
+		this.ran = new Random();
 		um = new UserManager();
 		am = new AccountManager();
 	}
@@ -102,86 +102,111 @@ public class Bank {
 
 	// 회원탈퇴
 	private void leave() {
-		if(isLogged(this.log)) {
+		if (isLogged(this.log)) {
 			System.out.print("password : ");
 			String password = inputText();
-			if(isCheckPassword(password)) {
+			if (isCheckPassword(password)) {
 				um.deleteUser(this.log);
 				System.out.println("[ 회원탈퇴 완료 ]");
-				
-			}
-			else {
+
+			} else {
 				System.out.println("[ 비밀번호 재확인 ]");
 			}
-		}
-		else {
+		} else {
 			System.out.println("[ 로그인 후 이용가능한 서비스입니다. ]");
 		}
 	}
-	
+
 	private int findIndex(String id) {
 		return this.um.indexOf(id);
 	}
-	
+
 	// 로그인
 	private void login() {
-		if(!isLogged(this.log)) {
+		if (!isLogged(this.log)) {
 			System.out.print("id : ");
 			String id = inputText();
 			System.out.print("password : ");
 			String password = inputText();
-			
+
 			ArrayList<User> userList = um.getUserList();
 			int index = -1;
-			for(User userManager : userList) {
-				if(id.equals(userManager.getId()) && password.equals(userManager.getPassword())){
+			for (User userManager : userList) {
+				if (id.equals(userManager.getId()) && password.equals(userManager.getPassword())) {
 					index = findIndex(id);
 					log = index;
 					System.out.printf("[ %s 님 로그인 성공 ]\n", id);
 				}
 			}
-			
-		}
-		else {
+
+		} else {
 			System.out.println("[ 이미 로그인 되었습니다. ]");
 		}
 	}
 
-
 	private String setAccount() {
 		int num1 = ran.nextInt(8999) + 1000;
 		int num2 = ran.nextInt(8999) + 1000;
-		
+
 		String number = num1 + "-" + num2;
 		return number;
-		
+
 	}
-	
+
+	private boolean isAccountDupl(String accountNum) {
+		ArrayList<Account> accountList = am.getList();
+		for (Account accountManager : accountList) {
+			if (accountNum.equals(accountManager.getAcccountNum())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// 계좌개설
 	private void create() {
 		if(isLogged(this.log)) {
-			if(am.getList().get(this.log).getSize() <= Account.LIMIT) {
+//			int count = am.getAccount(this.log).getSize();
+			int count = 0;
+			ArrayList<User> userList = um.getUserList();
+			ArrayList<Account> accountList = am.getList();
+			if (accountList.size() < Account.LIMIT) {
 				String accountNum = setAccount();
-				if(!accountNum.equals(am.getAccount(this.log).getAcccountNum())) {
-					ArrayList<Account> accountList = am.getList();
-					Account user = accountList.get(this.log);
-					Account account = new Account
-							(user.getUserId(), accountNum, user.getMoney());
-					
-					am.setAccount(this.log, account);
+				System.out.println(accountNum);
+				if (!isAccountDupl(accountNum)) {
+					Account account = new Account(userList.get(this.log).getId(), accountNum, 0, count);
 					am.createAccount(account);
-					System.out.printf("[ %s ] 계좌 개설 완료\n", accountNum);
+					count ++;
+					am.getAccount(this.log).setSize(count);
+					System.out.println("[ 개설 완료 ]");
 				}
-				
-			}
-			else {
+			} else {
 				System.out.println("[ 개설 가능 계좌갯수 초과 ]");
 			}
+		} else {
+			System.out.println("[ 로그인 후 이용가능한 서비스입니다. ]");
+		}
+	}
+	
+	private void printAccountNumber() {
+		ArrayList<User> userList = um.getUserList();
+		ArrayList<Account> accountList = am.getList();
+		for(int i=0; i<accountList.size(); i++) {
+			System.out.printf("[%d] %s\n", i+1, am.getAccount(this.log).getAcccountNum());
+		}
+	}
+	
+	// 계좌 철회 
+	private void delete() {
+		if(isLogged(this.log)) {
+			printAccountNumber();
 		}
 		else {
 			System.out.println("[ 로그인 후 이용가능한 서비스입니다. ]");
 		}
 	}
 	
+
 	public void run() {
 		while (true) {
 			System.out.println(this.log);
@@ -191,17 +216,15 @@ public class Bank {
 				join();
 			} else if (select == LEAVE) {
 				leave();
+			} else if (select == CREATE) {
+				create();
 			}
-		 else if(select == CREATE) {
-			 create();
+		 else if(select == DELETE) {
+			 delete();
 		 }
-//		 else if(select == DELETE) {
-//			 delete();
-//		 }
-		 else if(select == LOG_IN) {
-			 login();
-		 }
-			else if (select == QUIT)
+			else if (select == LOG_IN) {
+				login();
+			} else if (select == QUIT)
 				break;
 		}
 	}

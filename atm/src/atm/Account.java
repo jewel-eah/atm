@@ -9,13 +9,14 @@ public class Account {
 	private int money;
 	private int size;
 	
-	public Account(String userId, String accountNum, int money) {
+	public Account(String userId, String accountNum, int money, int size) {
 		this.userId = userId;
 		this.accountNum = accountNum;
 		this.money = money;
-		this.size = 1;
+		this.size = 0;
 	}
 	
+
 	public String getUserId() {
 		return this.userId;
 	}
@@ -31,5 +32,10 @@ public class Account {
 	public int getSize() {
 		return this.size;
 	}
+	public void setSize(int size) {
+		this.size = size;
+	}
+	
+	
 	
 }

@@ -12,12 +12,14 @@ public class AccountManager {
 		list.add(account);
 	}
 	
-	
 	// Read
 	public Account getAccount(int index) {
 		Account account = list.get(index);
-		
-		Account reqObj = new Account(null, null, index);
+		String id = account.getUserId();
+		String accountNum = account.getAcccountNum();
+		int money = account.getMoney();
+		int size = account.getSize();
+		Account reqObj = new Account(id, accountNum, money, size);
 		return reqObj;
 	}
 	
