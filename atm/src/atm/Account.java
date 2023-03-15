@@ -9,14 +9,17 @@ public class Account {
 	private int money;
 	private int size;
 	
-	public Account(String userId, String accountNum, int money, int size) {
+	public Account(String userId, String accountNum) {
 		this.userId = userId;
 		this.accountNum = accountNum;
-		this.money = money;
-		this.size = 0;
+//		this.money = money;
 	}
 	
 
+	public Account(String userId) {
+		this.userId = userId;
+	}
+	
 	public String getUserId() {
 		return this.userId;
 	}
@@ -24,9 +27,16 @@ public class Account {
 	public String getAcccountNum() {
 		return this.accountNum;
 	}
+	public void setAccountNum(String accountNum) {
+		this.accountNum = accountNum;
+	}
+	
 	
 	public int getMoney() {
 		return this.money;
+	}
+	public void setMoney(int money) {
+		this.money = money;
 	}
 	
 	public int getSize() {
