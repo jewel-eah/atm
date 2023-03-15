@@ -2,6 +2,8 @@ package atm;
 
 public class Account {
 	
+	public static int ADD = 1;
+	public static int DELETE = 2;
 	public static int LIMIT = 3;
 	
 	private String userId;

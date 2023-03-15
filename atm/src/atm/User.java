@@ -62,8 +62,10 @@ public class User {
 	public Account getAccount(int index) {
 		return this.accs.get(index);
 	}
-	public void setAccount(Account accs) {
-		this.accs = accs;
+
+	public void deleteAcoount(Account account) {
+		this.accs.remove(account);
+		
 	}
 
 }

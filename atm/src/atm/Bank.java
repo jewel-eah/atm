@@ -11,6 +11,7 @@ public class Bank {
 	private final int CREATE = 3;
 	private final int DELETE = 4;
 	private final int LOG_IN = 5;
+	private final int LOG_OUT = 6;
 	private final int QUIT = 0;
 
 	private UserManager um;
@@ -36,6 +37,7 @@ public class Bank {
 		System.out.println("3. 계좌신청");
 		System.out.println("4. 계좌철회");
 		System.out.println("5. 로그인");
+		System.out.println("6. 로그아웃");
 		System.out.println("0. 종료");
 		System.out.println("메뉴 : ");
 	}
@@ -50,17 +52,16 @@ public class Bank {
 		return input;
 	}
 
-
 	// 회원가입
 	private void join() {
-		if(!isLogged(this.log)) {
+		if (!isLogged(this.log)) {
 			System.out.print("id : ");
 			String id = inputText();
 			System.out.println("name : ");
 			String name = inputText();
 			System.out.print("password : ");
 			String password = inputText();
-			
+
 			User user = new User(id, password, name);
 			if (this.um.addUser(user) != null) {
 				System.out.println("[ 회원가입 성공 ]");
@@ -68,13 +69,12 @@ public class Bank {
 			} else {
 				System.out.println("[ 중복된 아이디가 존재합니다. ]");
 			}
-		}
-		else {
+		} else {
 			System.out.println("[ 로그아웃 후 이용가능합니다. ]");
 		}
 	}
 
-	// 로그 체크 
+	// 로그 체크
 	private boolean isLogged(int log) {
 		if (log != -1) {
 			return true;
@@ -100,14 +100,8 @@ public class Bank {
 		}
 	}
 
-//
-//	private int findIndex(String id) {
-//		return this.um.indexOf(id);
-//	}
-//
-//	
 	// 로그인
-	private void login() {
+	private void logIn() {
 		if (!isLogged(this.log)) {
 			System.out.print("id : ");
 			String id = inputText();
@@ -115,12 +109,11 @@ public class Bank {
 			String password = inputText();
 
 			int index = -1;
-			if(this.um.checkLogInfo(id, password)) {
+			if (this.um.checkLogInfo(id, password)) {
 				index = um.indexOf(id);
-				log =index;
-				System.out.printf("[ %s 님 로그인 성공 ]\n", id);				
-			}
-			else {
+				log = index;
+				System.out.printf("[ %s 님 로그인 성공 ]\n", id);
+			} else {
 				System.out.println("[ 일치하는 정보가 없습니다. ]");
 			}
 		} else {
@@ -128,14 +121,14 @@ public class Bank {
 		}
 	}
 
-	private boolean isAccountDupl(String accountNum) {
-		ArrayList<Account> accountList = am.getList();
-		for (Account accountManager : accountList) {
-			if (accountNum.equals(accountManager.getAcccountNum())) {
-				return true;
-			}
+	// 로그아웃
+	private void logOut() {
+		if (isLogged(this.log)) {
+			this.log = -1;
+			System.out.println("[ 로그아웃 완료 ]");
+		} else {
+			System.out.println("[ 로그인 먼저 해주세요. ]");
 		}
-		return false;
 	}
 
 	// 계좌개설
@@ -143,23 +136,19 @@ public class Bank {
 		if (isLogged(this.log)) {
 			User user = this.um.getUser(this.log);
 			String id = user.getId();
-			if(user.getAccountSize() < Account.LIMIT) {
+
+			if (user.getAccountSize() < Account.LIMIT) {
 				Account account = this.am.createAccount(new Account(id));
-				this.um.setUser(user, account);
+				this.um.setUser(user, account, Account.ADD);
 				this.um.printAccount(user, account, this.log);
-//				am.printAccountNumber(this.log);
-				
 				System.out.println("[ 계좌생성 완료 ]");
-			}
-			else {
+			} else {
 				System.out.println("[ 개설 가능한 갯수 초과 ]");
 			}
-		}
-		else {
+		} else {
 			System.out.println("[ 로그인 후 이용가능한 서비스입니다. ]");
 		}
 	}
-
 
 	// 계좌 철회
 	private void delete() {
@@ -167,17 +156,18 @@ public class Bank {
 			User user = this.um.getUser(this.log);
 			Account account = this.am.getAccount(this.log);
 			this.um.printAccount(user, account, this.log);
+
 			System.out.print("철회할 계좌번호 : ");
-			int delAccount = inputNumber() -1;
-			if(am.isExsist(delAccount)) {
-				System.out.println(am.getAccount(delAccount).getAcccountNum());
-				am.deleteAccount(delAccount, account);
-				um.deleteAccount(delAccount, this.log);
-//				um.getUser(this.log).getAccountList().remove(delAccount);
-//				um.setUser(user, account);
+			int delAccount = inputNumber() - 1;
+
+			if (am.isExsist(delAccount)) {
+				System.out.printf("[ %s ]\n", am.getAccount(delAccount).getAcccountNum());
+				Account delAcc = user.getAccount(delAccount);
+				am.deleteAccount(delAcc);
+				this.um.setUser(user, delAcc, Account.DELETE);
+
 				System.out.println("[ 계좌 철회 완료 ]");
-			}
-			else {
+			} else {
 				System.out.println("[ 다시 확인해주세요. ]");
 			}
 		} else {
@@ -185,24 +175,25 @@ public class Bank {
 		}
 	}
 
+	// 메인 런
 	public void run() {
 		while (true) {
-			System.out.printf("[ log : %d ]\n",this.log);
+			System.out.printf("[ log : %d ]\n", this.log);
 			printMainMenu();
 			int select = inputNumber();
 			if (select == JOIN) {
 				join();
 			} else if (select == LEAVE) {
 				leave();
-			}
-				else if (select == CREATE) {
-					createAccount();
-			}
-				else if (select == DELETE) {
+			} else if (select == CREATE) {
+				createAccount();
+			} else if (select == DELETE) {
 				delete();
-			}
-				else if (select == LOG_IN) {
-				login();
+			} else if (select == LOG_IN) {
+				logIn();
+
+			} else if (select == LOG_OUT) {
+				logOut();
 			} else if (select == QUIT)
 				break;
 		}

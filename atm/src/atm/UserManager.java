@@ -82,10 +82,15 @@ public class UserManager {
 		}
 	}
 	
-	public void setUser(User user, Account account) {
+	public void setUser(User user, Account account, int order) {
 		int index = indexOf(user.getId());
 		
-		list.get(index).addAcoount(account);
+		if(order == Account.ADD) {
+			list.get(index).addAcoount(account);			
+		}
+		else if(order == Account.DELETE) {
+			list.get(index).deleteAcoount(account);						
+		}
 	}
 	
 	// 로그인 검증 

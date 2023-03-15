@@ -68,10 +68,11 @@ public class AccountManager {
 		return false;
 	}
 	
-	
-	public void deleteAccount(int index, Account account) {
-		list.remove(index);
-		list.set(index, account);
+//	System.out.println(am.getAccount(delAccount).getAcccountNum());
+//	am.deleteAccount(delAccount);
+	public void deleteAccount(Account account) {
+		Account delAcc = getAccountByNum(account.getAcccountNum());
+		list.remove(delAcc);
 	}
 	
 	public ArrayList<Account> getList(){
