@@ -112,20 +112,14 @@ public class UserManager {
 	}	
 	
 	
-	public void deleteUserById(String id) {
-		
-	}
-	
+//	public void deleteUserById(String id) {
+//		
+//	}
+//	
 	public ArrayList<User> getUserList(){
 		return list;
 	}
 
-	public void deleteAccount(int delAccount, int log) {
-		Account account = list.get(log).getAccount(delAccount);
-//		list.remove(account);
-	}
-
-	
 }
 	
 	

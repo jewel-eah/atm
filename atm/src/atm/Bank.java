@@ -1,17 +1,14 @@
 package atm;
 
-import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 
 public class Bank {
 
 	private final int JOIN = 1;
 	private final int LEAVE = 2;
-	private final int CREATE = 3;
-	private final int DELETE = 4;
-	private final int LOG_IN = 5;
-	private final int LOG_OUT = 6;
+	private final int LOG_IN = 3;
+	private final int LOG_OUT = 4;
+	private final int BANKING = 5;
 	private final int QUIT = 0;
 
 	private UserManager um;
@@ -34,10 +31,9 @@ public class Bank {
 		System.out.println("--- " + this.name + " ATM ---");
 		System.out.println("1. 회원가입");
 		System.out.println("2. 회원탈퇴");
-		System.out.println("3. 계좌신청");
-		System.out.println("4. 계좌철회");
-		System.out.println("5. 로그인");
-		System.out.println("6. 로그아웃");
+		System.out.println("3. 로그인");
+		System.out.println("4. 로그아웃");
+		System.out.println("5. 뱅킹 서비스");
 		System.out.println("0. 종료");
 		System.out.println("메뉴 : ");
 	}
@@ -140,6 +136,7 @@ public class Bank {
 			if (user.getAccountSize() < Account.LIMIT) {
 				Account account = this.am.createAccount(new Account(id));
 				this.um.setUser(user, account, Account.ADD);
+				System.out.println("----- 보유 계좌 목록 ------");
 				this.um.printAccount(user, account, this.log);
 				System.out.println("[ 계좌생성 완료 ]");
 			} else {
@@ -151,7 +148,7 @@ public class Bank {
 	}
 
 	// 계좌 철회
-	private void delete() {
+	private void deleteAccount() {
 		if (isLogged(this.log)) {
 			User user = this.um.getUser(this.log);
 			Account account = this.am.getAccount(this.log);
@@ -176,27 +173,99 @@ public class Bank {
 	}
 
 	// 메인 런
-	public void run() {
-		while (true) {
-			System.out.printf("[ log : %d ]\n", this.log);
-			printMainMenu();
-			int select = inputNumber();
-			if (select == JOIN) {
-				join();
-			} else if (select == LEAVE) {
-				leave();
-			} else if (select == CREATE) {
-				createAccount();
-			} else if (select == DELETE) {
-				delete();
-			} else if (select == LOG_IN) {
-				logIn();
+		public void run() {
+			while (true) {
+				System.out.printf("[ log : %d ]\n", this.log);
+				printMainMenu();
+				int select = inputNumber();
+				if (select == JOIN) {
+					join();
+				} else if (select == LEAVE) {
+					leave();
+				} else if (select == LOG_IN) {
+					logIn();
+				} else if (select == LOG_OUT) {
+					logOut();
+				} else if (select == BANKING) {
+					bankingRun();
+				} else if (select == QUIT)
+					break;
+			}
+		}
+	
+		
+	private void addMoney() {
+		User user = this.um.getUser(this.log);
+		Account account = this.am.getAccount(this.log);
+		this.um.printAccount(user, account, this.log);
+		System.out.print("입금할 계좌 :");
+		int pickAccount = inputNumber() -1;
+		
+		if(am.isExsist(pickAccount)) {
+			Account pickAcc = user.getAccount(pickAccount);
+			System.out.print("입금할 금액 : ");
+			int inputMoney = inputNumber();
+			
+			if(inputMoney > 0 ) {
+				am.getAccount(this.log).setMoney(inputMoney);
+				System.out.println("[ 입금이 완료되었습니다 ]");
+				System.out.println("[ 현재잔액 : %d원 ]");
+			}
+			else {
+				System.out.println("[ 0원 이상 입금 가능  ]");
+			}
+		}
+		
+		else {
+			System.out.println("[ 계좌를 다시 확인해주세요 ]");
+		}
+	}	
+		
+	// 뱅킹서비스 메뉴 
+	private void printBankingMenu() {
+		System.out.println("--- BANKING SERVICE ---");
+		System.out.println("1. 계좌신청");
+		System.out.println("2. 계좌철회");
+		System.out.println("3. 입금");
+		System.out.println("4. 출금");
+		System.out.println("5. 조회");
+		System.out.println("6. 이체");
+		System.out.println("7. 파일");
+		System.out.println("0. 뒤로가기");
+		System.out.println("----------------------");
+		System.out.print("메뉴 : ");
+	}
 
-			} else if (select == LOG_OUT) {
-				logOut();
-			} else if (select == QUIT)
+	
+	// 뱅킹서비스 런 
+	public void bankingRun() {
+		while (true) {
+			if (isLogged(this.log)) {
+				printBankingMenu();
+				int select = inputNumber();
+				if (select == 1)
+					createAccount();
+				else if (select == 2)
+					deleteAccount();
+				else if (select == 3)
+					addMoney();
+//		else if(select == 4) outMoney();
+//		else if(select == 5) accountInfo();
+//		else if(select == 6) sendMoney();
+//		else if(select == 7) file();
+				else if (select == 0)
+					break;
+			} else {
+				System.out.println("[ 로그인 후 이용가능한 메뉴입니다. ]");
 				break;
+			}
 		}
 	}
+
+	
+	
+	
+	
+	
 
 }
