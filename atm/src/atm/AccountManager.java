@@ -10,7 +10,7 @@ public class AccountManager {
 	
 	// Create
 	public Account createAccount(Account account) {
-		String number = setAccount();
+		String number = makeAccount();
 		account.setAccountNum(number);
 		System.out.printf("[ %s ]\n", number);
 		list.add(account);
@@ -21,23 +21,26 @@ public class AccountManager {
 	public Account getAccount(int index) {
 		Account account = list.get(index);
 		
-		Account reqObj = new Account(account.getUserId(), account.getAcccountNum());
+		Account reqObj = new Account(account.getUserId(), account.getAccountNum(), account.getMoney());
 		return reqObj;
 	}
 	
+	public Account setAccount(User user, Account account) {
+		return account;
+	}
 	
 	public Account getAccountByNum(String accountNum) {
 		Account account = null;
 		
 		for(Account object : list) {
-			if(object.getAcccountNum().equals(accountNum)) {
+			if(object.getAccountNum().equals(accountNum)) {
 				account = object;
 			}
 		}
 		return account;
 	}
 	
-	private String setAccount() {
+	private String makeAccount() {
 		Random ran = new Random();
 		String number = "";
 		while(true) {
@@ -60,6 +63,8 @@ public class AccountManager {
 		list.set(index, account);
 	}
 	
+	
+	
 	// Delete
 	public boolean isExsist(int delAccount) {
 		if(delAccount <= list.size()) {
@@ -69,7 +74,7 @@ public class AccountManager {
 	}
 	
 	public void deleteAccount(Account account) {
-		Account delAcc = getAccountByNum(account.getAcccountNum());
+		Account delAcc = getAccountByNum(account.getAccountNum());
 		list.remove(delAcc);
 	}
 	
@@ -78,12 +83,30 @@ public class AccountManager {
 	}
 	
 	// printAccountList
-	public void printAccountNumber(int index) {
-		for (int i = 0; i <list.size(); i++) {
-			System.out.printf("[%d] %s/\n", i+1, list.get(i).getAcccountNum());
+	public void printAccountNumber(int index, int order) {
+		if(order == Account.ALL) {
+			for (int i = 0; i <list.size(); i++) {
+				System.out.printf("[%d] %s\n", i+1, list.get(i).getAccountNum());
+			}
+		}
+		else if(order == Account.ONE) {
+			System.out.printf("[%d] %s\n", index+1, list.get(index).getAccountNum());
 		}
 	}
 
+	public String findAccountNumber(int index) {
+		String accountNumber = list.get(index).getAccountNum();
+		return accountNumber;
+	}
 	
+	public void setMoney(int pickAccount, int money) {
+		String findAcc = findAccountNumber(pickAccount);
+		Account user = list.get(pickAccount);
+		int currentMoney = user.getMoney();
+		int totalMoney = currentMoney + money;
+		
+		Account account = new Account(user.getUserId(), findAcc, totalMoney);
+		list.set(pickAccount, account);
+	}
 	
 }

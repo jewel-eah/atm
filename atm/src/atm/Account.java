@@ -5,16 +5,18 @@ public class Account {
 	public static int ADD = 1;
 	public static int DELETE = 2;
 	public static int LIMIT = 3;
+	public static int ALL = 4;
+	public static int ONE = 5;
 	
 	private String userId;
 	private String accountNum;
 	private int money;
 	private int size;
 	
-	public Account(String userId, String accountNum) {
+	public Account(String userId, String accountNum, int money) {
 		this.userId = userId;
 		this.accountNum = accountNum;
-//		this.money = money;
+		this.money = money;
 	}
 	
 
@@ -26,7 +28,7 @@ public class Account {
 		return this.userId;
 	}
 
-	public String getAcccountNum() {
+	public String getAccountNum() {
 		return this.accountNum;
 	}
 	public void setAccountNum(String accountNum) {

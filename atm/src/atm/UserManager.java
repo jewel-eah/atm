@@ -78,7 +78,7 @@ public class UserManager {
 	
 	public void printAccount(User user, Account account, int log) {
 		for(int i=0; i<list.get(log).getAccountSize(); i++) {
-			System.out.printf("[%d] %s\n", i+1, list.get(log).getAccount(i).getAcccountNum());
+			System.out.printf("[%d] %s\n", i+1, list.get(log).getAccount(i).getAccountNum());
 		}
 	}
 	

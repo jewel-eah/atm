@@ -28,6 +28,7 @@ public class Bank {
 	}
 
 	private void printMainMenu() {
+		System.out.println("=============================");
 		System.out.println("--- " + this.name + " ATM ---");
 		System.out.println("1. 회원가입");
 		System.out.println("2. 회원탈퇴");
@@ -158,7 +159,7 @@ public class Bank {
 			int delAccount = inputNumber() - 1;
 
 			if (am.isExsist(delAccount)) {
-				System.out.printf("[ %s ]\n", am.getAccount(delAccount).getAcccountNum());
+				System.out.printf("[ %s ]\n", am.getAccount(delAccount).getAccountNum());
 				Account delAcc = user.getAccount(delAccount);
 				am.deleteAccount(delAcc);
 				this.um.setUser(user, delAcc, Account.DELETE);
@@ -173,56 +174,62 @@ public class Bank {
 	}
 
 	// 메인 런
-		public void run() {
-			while (true) {
-				System.out.printf("[ log : %d ]\n", this.log);
-				printMainMenu();
-				int select = inputNumber();
-				if (select == JOIN) {
-					join();
-				} else if (select == LEAVE) {
-					leave();
-				} else if (select == LOG_IN) {
-					logIn();
-				} else if (select == LOG_OUT) {
-					logOut();
-				} else if (select == BANKING) {
-					bankingRun();
-				} else if (select == QUIT)
-					break;
-			}
+	public void run() {
+		while (true) {
+			System.out.printf("[ log : %d ]\n", this.log);
+			printMainMenu();
+			int select = inputNumber();
+			if (select == JOIN) {
+				join();
+			} else if (select == LEAVE) {
+				leave();
+			} else if (select == LOG_IN) {
+				logIn();
+			} else if (select == LOG_OUT) {
+				logOut();
+			} else if (select == BANKING) {
+				bankingRun();
+			} else if (select == QUIT)
+				break;
 		}
-	
-		
+	}
+
 	private void addMoney() {
-		User user = this.um.getUser(this.log);
-		Account account = this.am.getAccount(this.log);
-		this.um.printAccount(user, account, this.log);
+		am.printAccountNumber(this.log, Account.ALL);
+
 		System.out.print("입금할 계좌 :");
-		int pickAccount = inputNumber() -1;
-		
-		if(am.isExsist(pickAccount)) {
-			Account pickAcc = user.getAccount(pickAccount);
-			System.out.print("입금할 금액 : ");
-			int inputMoney = inputNumber();
-			
-			if(inputMoney > 0 ) {
-				am.getAccount(this.log).setMoney(inputMoney);
-				System.out.println("[ 입금이 완료되었습니다 ]");
-				System.out.println("[ 현재잔액 : %d원 ]");
-			}
-			else {
-				System.out.println("[ 0원 이상 입금 가능  ]");
+		int pickAccount = inputNumber() - 1;
+
+		if (am.isExsist(pickAccount)) {
+			am.printAccountNumber(pickAccount, Account.ONE);
+			System.out.print("[ 입금진행 yes : 1 / no : 2]");
+			int select = inputNumber();
+			if (select == 1) {
+				System.out.print("입금할 금액 : ");
+				int inputMoney = inputNumber();
+
+				if (inputMoney > 0) {
+					am.setMoney(pickAccount, inputMoney);
+					Account account = am.getAccount(pickAccount);
+
+					System.out.println("[ 입금 완료 ]");
+					System.out.printf("[ 현재잔액 : %d원 ]\n", account.getMoney());
+				} else {
+					System.out.println("[ 0원 이상 입금 가능  ]");
+				}
+			} else {
+				System.out.println("[ 입금 취소 ]");
 			}
 		}
-		
+
 		else {
 			System.out.println("[ 계좌를 다시 확인해주세요 ]");
 		}
-	}	
-		
-	// 뱅킹서비스 메뉴 
+	}
+
+	// 뱅킹서비스 메뉴
 	private void printBankingMenu() {
+		System.out.println();
 		System.out.println("--- BANKING SERVICE ---");
 		System.out.println("1. 계좌신청");
 		System.out.println("2. 계좌철회");
@@ -236,8 +243,7 @@ public class Bank {
 		System.out.print("메뉴 : ");
 	}
 
-	
-	// 뱅킹서비스 런 
+	// 뱅킹서비스 런
 	public void bankingRun() {
 		while (true) {
 			if (isLogged(this.log)) {
@@ -261,11 +267,5 @@ public class Bank {
 			}
 		}
 	}
-
-	
-	
-	
-	
-	
 
 }
