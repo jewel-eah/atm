@@ -53,19 +53,24 @@ public class Bank {
 
 	// 회원가입
 	private void join() {
-		System.out.print("id : ");
-		String id = inputText();
-		System.out.println("name : ");
-		String name = inputText();
-		System.out.print("password : ");
-		String password = inputText();
-
-		User user = new User(id, password, name);
-		if (this.um.addUser(user) != null) {
-			System.out.println("[ 회원가입 성공 ]");
-			System.out.printf("[ %s님 환영합니다. ]\n", id);
-		} else {
-			System.out.println("[ 중복된 아이디가 존재합니다. ]");
+		if(!isLogged(this.log)) {
+			System.out.print("id : ");
+			String id = inputText();
+			System.out.println("name : ");
+			String name = inputText();
+			System.out.print("password : ");
+			String password = inputText();
+			
+			User user = new User(id, password, name);
+			if (this.um.addUser(user) != null) {
+				System.out.println("[ 회원가입 성공 ]");
+				System.out.printf("[ %s님 환영합니다. ]\n", id);
+			} else {
+				System.out.println("[ 중복된 아이디가 존재합니다. ]");
+			}
+		}
+		else {
+			System.out.println("[ 로그아웃 후 이용가능합니다. ]");
 		}
 	}
 
@@ -166,8 +171,10 @@ public class Bank {
 			int delAccount = inputNumber() -1;
 			if(am.isExsist(delAccount)) {
 				System.out.println(am.getAccount(delAccount).getAcccountNum());
-				am.deleteAccount(delAccount);
-				am.setAccount(delAccount, account);
+				am.deleteAccount(delAccount, account);
+				um.deleteAccount(delAccount, this.log);
+//				um.getUser(this.log).getAccountList().remove(delAccount);
+//				um.setUser(user, account);
 				System.out.println("[ 계좌 철회 완료 ]");
 			}
 			else {

@@ -115,6 +115,11 @@ public class UserManager {
 		return list;
 	}
 
+	public void deleteAccount(int delAccount, int log) {
+		Account account = list.get(log).getAccount(delAccount);
+//		list.remove(account);
+	}
+
 	
 }
 	

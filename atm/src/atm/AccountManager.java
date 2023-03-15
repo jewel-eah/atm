@@ -69,11 +69,9 @@ public class AccountManager {
 	}
 	
 	
-	public void deleteAccount(int index) {
-		int size =  list.get(index).getSize();
-		size --;
-		list.get(index).setSize(size);
+	public void deleteAccount(int index, Account account) {
 		list.remove(index);
+		list.set(index, account);
 	}
 	
 	public ArrayList<Account> getList(){
